@@ -1,11 +1,20 @@
-// Enhanced dashboard controller with improved navigation and state management
+// src/app/components/dashboard/dashboard.component.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
-import { CommonEngine } from '@angular/ssr/node';
-import { OutagesComponent } from '../outages/outages.component';
-import { PredictComponent } from '../predict/predict.component';
+import { RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
 import { HomeComponent } from '../home/home.component';
 import { MapComponent } from '../map/map.component';
+import { OutagesComponent } from '../outages/outages.component';
+import { PredictComponent } from '../predict/predict.component';
 import { ProfileComponent } from '../profile/profile.component';
 
 interface Tab {
@@ -17,20 +26,33 @@ interface Tab {
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  standalone: true,
   imports: [
     CommonModule,
-    OutagesComponent,
-    PredictComponent,
+    RouterModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatBadgeModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatDividerModule,
     HomeComponent,
     MapComponent,
+    OutagesComponent,
+    PredictComponent,
     ProfileComponent,
   ],
-  standalone: true,
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent {
-  activeTab: string = 'map'; // Start with map as it's most visual
+export class DashboardComponent implements OnInit {
+  activeTab = 'outages';
+  sidebarCollapsed = false;
+  userProfile: any = {};
+  unreadNotifications = 3;
 
   tabs: Tab[] = [
     {
@@ -59,12 +81,30 @@ export class DashboardComponent {
     },
   ];
 
+  constructor() {}
+
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    const profile = localStorage.getItem('gemicast-user-profile');
+    if (profile) {
+      this.userProfile = JSON.parse(profile);
+    }
+  }
+
   setActiveTab(tabId: string): void {
     this.activeTab = tabId;
   }
 
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
   getActiveTabName(): string {
-    return this.tabs.find((tab) => tab.id === this.activeTab)?.name || '';
+    const tab = this.tabs.find((t) => t.id === this.activeTab);
+    return tab ? tab.name : '';
   }
 
   getActiveTabDescription(): string {
@@ -74,7 +114,6 @@ export class DashboardComponent {
   }
 
   shouldShowQuickStats(): boolean {
-    // Show quick stats on map and outages tabs
-    return ['map', 'outages'].includes(this.activeTab);
+    return this.activeTab === 'outages' || this.activeTab === 'map';
   }
 }

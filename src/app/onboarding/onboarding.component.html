@@ -1,0 +1,611 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4"
+>
+  <div class="max-w-6xl w-full">
+    <!-- Progress Indicator -->
+    <div class="mb-8">
+      <div class="flex justify-center items-center space-x-4">
+        <div
+          *ngFor="let step of steps; let i = index"
+          class="flex items-center"
+          [class.opacity-50]="i > currentStep"
+        >
+          <div
+            class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300"
+            [class.bg-blue-600]="i <= currentStep"
+            [class.text-white]="i <= currentStep"
+            [class.bg-gray-200]="i > currentStep"
+            [class.text-gray-500]="i > currentStep"
+          >
+            <span class="material-icons" *ngIf="i < currentStep">check</span>
+            <span *ngIf="i >= currentStep">{{ i + 1 }}</span>
+          </div>
+          <span
+            class="ml-2 text-sm font-medium"
+            [class.text-gray-500]="i > currentStep"
+          >
+            {{ step.title }}
+          </span>
+          <div
+            *ngIf="i < steps.length - 1"
+            class="w-12 h-0.5 mx-4 transition-all duration-300"
+            [class.bg-blue-600]="i < currentStep"
+            [class.bg-gray-200]="i >= currentStep"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Step -->
+    <mat-card *ngIf="currentStep === 0" class="p-8 text-center">
+      <div class="mb-8">
+        <div
+          class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-6"
+        >
+          <span class="material-icons text-white text-4xl">bolt</span>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Welcome to Gemicast
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          AI-powered outage prediction that keeps your operations running when
+          it matters most
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="text-center p-4">
+          <div
+            class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3"
+          >
+            <span class="material-icons text-blue-600 text-2xl">analytics</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">
+            Predictive Intelligence
+          </h3>
+          <p class="text-gray-600 text-sm">
+            AI-powered forecasts up to 7 days ahead
+          </p>
+        </div>
+        <div class="text-center p-4">
+          <div
+            class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3"
+          >
+            <span class="material-icons text-green-600 text-2xl"
+              >notifications_active</span
+            >
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Smart Alerts</h3>
+          <p class="text-gray-600 text-sm">
+            Customized notifications for your industry
+          </p>
+        </div>
+        <div class="text-center p-4">
+          <div
+            class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3"
+          >
+            <span class="material-icons text-purple-600 text-2xl"
+              >integration_instructions</span
+            >
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Seamless Integration</h3>
+          <p class="text-gray-600 text-sm">Connect with your existing tools</p>
+        </div>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="text-lg px-8 py-3"
+        (click)="nextStep()"
+      >
+        Get Started
+      </button>
+    </mat-card>
+
+    <!-- Industry Selection -->
+    <mat-card *ngIf="currentStep === 1" class="p-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2 text-center">
+        What industry are you in?
+      </h2>
+      <p class="text-gray-600 text-center mb-8">
+        We'll customize your experience based on your industry's specific outage
+        risks
+      </p>
+
+      <!-- Tier 1 Industries (Priority) -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="material-icons text-red-500 mr-2">priority_high</span>
+          High-Impact Industries
+        </h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div
+            *ngFor="let industry of getTier1Industries()"
+            class="industry-card border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 hover:shadow-lg"
+            [class.border-blue-500]="userProfile.industry === industry.id"
+            [class.bg-blue-50]="userProfile.industry === industry.id"
+            [class.border-gray-200]="userProfile.industry !== industry.id"
+            (click)="selectIndustry(industry.id)"
+          >
+            <div class="flex items-start space-x-4">
+              <div
+                class="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center"
+              >
+                <span class="material-icons text-white">{{
+                  industry.icon
+                }}</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-gray-900 mb-1">
+                  {{ industry.name }}
+                </h4>
+                <p class="text-sm text-gray-600 mb-2">
+                  {{ industry.description }}
+                </p>
+                <div class="text-xs text-red-600 font-medium">
+                  Avg. Cost: {{ industry.averageOutageCost }}/hour
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 2 Industries -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="material-icons text-yellow-500 mr-2">warning</span>
+          Business-Critical Industries
+        </h3>
+        <div class="grid md:grid-cols-4 gap-3">
+          <div
+            *ngFor="let industry of getTier2Industries()"
+            class="industry-card border rounded-lg p-4 cursor-pointer transition-all duration-300 hover:shadow-md"
+            [class.border-blue-500]="userProfile.industry === industry.id"
+            [class.bg-blue-50]="userProfile.industry === industry.id"
+            [class.border-gray-200]="userProfile.industry !== industry.id"
+            (click)="selectIndustry(industry.id)"
+          >
+            <div class="text-center">
+              <div
+                class="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg flex items-center justify-center mx-auto mb-2"
+              >
+                <span class="material-icons text-white text-lg">{{
+                  industry.icon
+                }}</span>
+              </div>
+              <h4 class="font-medium text-gray-900 text-sm">
+                {{ industry.name }}
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 3 Industries -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="material-icons text-green-500 mr-2">info</span>
+          Other Industries
+        </h3>
+        <div class="grid md:grid-cols-5 gap-3">
+          <div
+            *ngFor="let industry of getTier3Industries()"
+            class="industry-card border rounded-lg p-3 cursor-pointer transition-all duration-300 hover:shadow-md"
+            [class.border-blue-500]="userProfile.industry === industry.id"
+            [class.bg-blue-50]="userProfile.industry === industry.id"
+            [class.border-gray-200]="userProfile.industry !== industry.id"
+            (click)="selectIndustry(industry.id)"
+          >
+            <div class="text-center">
+              <div
+                class="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-400 rounded-lg flex items-center justify-center mx-auto mb-1"
+              >
+                <span class="material-icons text-white text-sm">{{
+                  industry.icon
+                }}</span>
+              </div>
+              <h4 class="font-medium text-gray-900 text-xs">
+                {{ industry.name }}
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Industry Option -->
+      <div
+        class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
+      >
+        <p class="text-gray-600 mb-2">Don't see your industry?</p>
+        <button
+          mat-stroked-button
+          (click)="selectIndustry('other')"
+          [color]="userProfile.industry === 'other' ? 'primary' : 'basic'"
+        >
+          Other / Custom Industry
+        </button>
+      </div>
+
+      <!-- Industry-Specific Preview -->
+      <div
+        *ngIf="userProfile.industry && getSelectedIndustry()"
+        class="mt-8 p-6 bg-gray-50 rounded-lg"
+      >
+        <h4 class="font-semibold text-gray-900 mb-3">
+          What Gemicast will help you with:
+        </h4>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <h5 class="font-medium text-gray-700 mb-2">
+              Key Risks We Monitor:
+            </h5>
+            <ul class="text-sm text-gray-600 space-y-1">
+              <li
+                *ngFor="let risk of getSelectedIndustry()?.keyRisks"
+                class="flex items-center"
+              >
+                <span class="material-icons text-red-500 text-sm mr-2"
+                  >error</span
+                >
+                {{ risk }}
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="font-medium text-gray-700 mb-2">Use Cases:</h5>
+            <ul class="text-sm text-gray-600 space-y-1">
+              <li
+                *ngFor="let useCase of getSelectedIndustry()?.useCases"
+                class="flex items-center"
+              >
+                <span class="material-icons text-green-500 text-sm mr-2"
+                  >check_circle</span
+                >
+                {{ useCase }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-8">
+        <button mat-stroked-button (click)="previousStep()">Back</button>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!canProceed()"
+          (click)="nextStep()"
+        >
+          Continue
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- Role & Organization -->
+    <mat-card *ngIf="currentStep === 2" class="p-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2 text-center">
+        Tell us about your role
+      </h2>
+      <p class="text-gray-600 text-center mb-8">
+        This helps us prioritize the most relevant information for you
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Your Role</h3>
+          <div class="space-y-3">
+            <mat-radio-group
+              [(ngModel)]="userProfile.role"
+              class="flex flex-col space-y-3"
+            >
+              <mat-radio-button
+                *ngFor="let role of getRolesForIndustry()"
+                [value]="role.id"
+                class="role-option p-3 rounded-lg border transition-all duration-300"
+              >
+                <span class="ml-2 font-medium">{{ role.name }}</span>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">
+            Organization Size
+          </h3>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Number of employees</mat-label>
+            <mat-select [(ngModel)]="userProfile.organizationSize">
+              <mat-option value="startup">1-10 (Startup)</mat-option>
+              <mat-option value="small">11-50 (Small)</mat-option>
+              <mat-option value="medium">51-200 (Medium)</mat-option>
+              <mat-option value="large">201-1000 (Large)</mat-option>
+              <mat-option value="enterprise">1000+ (Enterprise)</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 mt-6">
+            Location
+          </h3>
+          <div class="space-y-4">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>State</mat-label>
+              <mat-select [(ngModel)]="userProfile.location.state">
+                <mat-option *ngFor="let state of states" [value]="state.code">
+                  {{ state.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>County</mat-label>
+              <mat-input
+                [(ngModel)]="userProfile.location.county"
+                placeholder="e.g., Davidson County"
+              ></mat-input>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-8">
+        <button mat-stroked-button (click)="previousStep()">Back</button>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!canProceed()"
+          (click)="nextStep()"
+        >
+          Continue
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- Concerns & Priorities -->
+    <mat-card *ngIf="currentStep === 3" class="p-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2 text-center">
+        What are your main concerns?
+      </h2>
+      <p class="text-gray-600 text-center mb-8">
+        Select all that apply - we'll prioritize these in your dashboard
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div
+          *ngFor="let concern of getConcernsForIndustry()"
+          class="concern-card border-2 rounded-lg p-4 cursor-pointer transition-all duration-300"
+          [class.border-blue-500]="
+            userProfile.primaryConcerns.includes(concern.id)
+          "
+          [class.bg-blue-50]="userProfile.primaryConcerns.includes(concern.id)"
+          [class.border-gray-200]="
+            !userProfile.primaryConcerns.includes(concern.id)
+          "
+          (click)="
+            toggleConcern(concern.id, {
+              target: {
+                checked: !userProfile.primaryConcerns.includes(concern.id),
+              },
+            })
+          "
+        >
+          <div class="flex items-start space-x-3">
+            <mat-checkbox
+              [checked]="userProfile.primaryConcerns.includes(concern.id)"
+              (change)="toggleConcern(concern.id, $event)"
+              color="primary"
+            ></mat-checkbox>
+            <div>
+              <h4 class="font-semibold text-gray-900">{{ concern.name }}</h4>
+              <p class="text-sm text-gray-600 mt-1">
+                {{ concern.description }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-8">
+        <button mat-stroked-button (click)="previousStep()">Back</button>
+        <button mat-raised-button color="primary" (click)="nextStep()">
+          Continue
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- Notifications & Integrations -->
+    <mat-card *ngIf="currentStep === 4" class="p-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2 text-center">
+        Stay informed
+      </h2>
+      <p class="text-gray-600 text-center mb-8">
+        Configure how you want to receive outage alerts
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">
+            Notification Preferences
+          </h3>
+          <div class="space-y-4">
+            <div
+              class="flex items-center justify-between p-3 border rounded-lg"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="material-icons text-blue-600">email</span>
+                <span class="font-medium">Email Alerts</span>
+              </div>
+              <mat-checkbox
+                [(ngModel)]="userProfile.notifications.email"
+                color="primary"
+              ></mat-checkbox>
+            </div>
+
+            <div
+              class="flex items-center justify-between p-3 border rounded-lg"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="material-icons text-green-600">sms</span>
+                <span class="font-medium">SMS Alerts</span>
+              </div>
+              <mat-checkbox
+                [(ngModel)]="userProfile.notifications.sms"
+                color="primary"
+              ></mat-checkbox>
+            </div>
+
+            <div
+              class="flex items-center justify-between p-3 border rounded-lg"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="material-icons text-purple-600">chat</span>
+                <span class="font-medium">Slack Integration</span>
+              </div>
+              <mat-checkbox
+                [(ngModel)]="userProfile.notifications.slack"
+                color="primary"
+              ></mat-checkbox>
+            </div>
+          </div>
+
+          <h4 class="text-md font-semibold text-gray-800 mb-3 mt-6">
+            Alert Threshold
+          </h4>
+          <mat-radio-group
+            [(ngModel)]="userProfile.notifications.threshold"
+            class="flex flex-col space-y-2"
+          >
+            <mat-radio-button value="high"
+              >High risk only (recommended for executives)</mat-radio-button
+            >
+            <mat-radio-button value="medium"
+              >Medium risk and above (recommended for
+              managers)</mat-radio-button
+            >
+            <mat-radio-button value="low"
+              >All alerts (recommended for operations)</mat-radio-button
+            >
+          </mat-radio-group>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Integrations</h3>
+          <div class="space-y-4">
+            <div
+              class="flex items-center justify-between p-3 border rounded-lg"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="material-icons text-blue-600">calendar_today</span>
+                <div>
+                  <div class="font-medium">Calendar Integration</div>
+                  <div class="text-sm text-gray-600">
+                    Sync with Google/Outlook Calendar
+                  </div>
+                </div>
+              </div>
+              <mat-checkbox
+                [(ngModel)]="userProfile.integrations.calendar"
+                color="primary"
+              ></mat-checkbox>
+            </div>
+
+            <div
+              class="flex items-center justify-between p-3 border rounded-lg"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="material-icons text-orange-600">construction</span>
+                <div>
+                  <div class="font-medium">Project Management</div>
+                  <div class="text-sm text-gray-600">
+                    Connect with Procore, Asana, etc.
+                  </div>
+                </div>
+              </div>
+              <mat-checkbox
+                [(ngModel)]="userProfile.integrations.projectManagement"
+                color="primary"
+              ></mat-checkbox>
+            </div>
+
+            <div
+              class="flex items-center justify-between p-3 border rounded-lg"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="material-icons text-red-600">sensors</span>
+                <div>
+                  <div class="font-medium">IoT Monitoring</div>
+                  <div class="text-sm text-gray-600">
+                    Generator fuel, UPS status, etc.
+                  </div>
+                </div>
+              </div>
+              <mat-checkbox
+                [(ngModel)]="userProfile.integrations.iot"
+                color="primary"
+              ></mat-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-8">
+        <button mat-stroked-button (click)="previousStep()">Back</button>
+        <button mat-raised-button color="primary" (click)="nextStep()">
+          Continue
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- Completion -->
+    <mat-card *ngIf="currentStep === 5" class="p-8 text-center">
+      <div class="mb-8">
+        <div
+          class="inline-flex items-center justify-center w-24 h-24 bg-green-100 rounded-full mb-6"
+        >
+          <span class="material-icons text-green-600 text-4xl"
+            >check_circle</span
+          >
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">You're all set!</h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+          Your personalized Gemicast dashboard is ready. We've configured
+          everything based on your {{ getSelectedIndustry()?.name }} industry
+          needs.
+        </p>
+      </div>
+
+      <!-- Summary -->
+      <div class="bg-gray-50 rounded-lg p-6 mb-8 text-left max-w-2xl mx-auto">
+        <h3 class="font-semibold text-gray-900 mb-4">
+          Your Configuration Summary:
+        </h3>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <strong>Industry:</strong> {{ getSelectedIndustry()?.name }}<br />
+            <strong>Role:</strong> {{ getSelectedRoleName() }}<br />
+            <strong>Location:</strong> {{ userProfile.location.county }},
+            {{ userProfile.location.state }}
+          </div>
+          <div>
+            <strong>Alerts:</strong>
+            {{ userProfile.notifications.threshold }} risk threshold<br />
+            <strong>Notifications:</strong> {{ getNotificationSummary() }}<br />
+            <strong>Concerns:</strong>
+            {{ userProfile.primaryConcerns.length }} selected
+          </div>
+        </div>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="text-lg px-8 py-3"
+        (click)="completeOnboarding()"
+      >
+        Launch Dashboard
+      </button>
+    </mat-card>
+  </div>
+</div>

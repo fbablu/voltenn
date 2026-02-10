@@ -562,6 +562,10 @@ export class OutagesComponent implements OnInit {
     }
   }
 
+  get countyControl(): FormControl {
+    return this.predictionForm.get('county') as FormControl;
+  }
+
   calculateRiskLevel(score: number): string {
     if (score > 75) return 'Very High';
     if (score > 50) return 'High';
