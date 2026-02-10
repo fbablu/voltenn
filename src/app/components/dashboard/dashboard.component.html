@@ -1,207 +1,101 @@
 <!-- src/app/components/dashboard/dashboard.component.html -->
 <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
-  <!-- Enhanced Sidebar -->
+  <!-- Enhanced Sidebar with better visual hierarchy -->
   <div
-    class="transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-xl border-r border-gray-200 dark:border-gray-700 z-20"
-    [class.w-20]="sidebarCollapsed"
-    [class.w-80]="!sidebarCollapsed"
+    class="w-16 md:w-72 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 transition-all duration-300"
   >
-    <!-- Header with Industry Context -->
-    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex items-center justify-between">
-        <div
-          class="flex items-center space-x-3"
-          [class.hidden]="sidebarCollapsed"
-        >
+    <div class="flex flex-col h-full">
+      <!-- Brand Header -->
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center space-x-3">
           <div
-            class="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg"
+            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center"
           >
-            <span class="material-icons text-white text-xl">bolt</span>
+            <span class="text-white font-bold text-lg">G</span>
           </div>
-          <div>
+          <div class="hidden md:block">
             <h1 class="text-xl font-bold text-gray-900 dark:text-white">
               Gemicast
             </h1>
-            <div class="flex items-center space-x-2">
-              <span
-                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-              >
-                {{ industryName }}
-              </span>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              AI-Powered Outage Prediction
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 pt-6 px-3">
+        <ul class="space-y-2">
+          <li *ngFor="let tab of tabs" class="relative">
+            <button
+              (click)="setActiveTab(tab.id)"
+              [ngClass]="{
+                'flex items-center w-full p-3 text-left transition-all duration-200 rounded-lg group': true,
+                'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-sm border border-blue-200 dark:border-blue-800':
+                  activeTab === tab.id,
+                'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white':
+                  activeTab !== tab.id,
+              }"
+            >
+              <!-- Icon container -->
               <div
-                *ngIf="hasCriticalMetrics()"
-                class="w-2 h-2 bg-red-500 rounded-full animate-pulse"
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        <button
-          (click)="toggleSidebar()"
-          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          matTooltip="{{ sidebarCollapsed ? 'Expand' : 'Collapse' }} sidebar"
-        >
-          <span class="material-icons text-gray-500">
-            {{ sidebarCollapsed ? "menu_open" : "menu" }}
-          </span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Quick Metrics (when expanded) -->
-    <div
-      *ngIf="!sidebarCollapsed"
-      class="p-4 border-b border-gray-200 dark:border-gray-700"
-    >
-      <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-        Key Metrics
-      </h3>
-      <div class="space-y-3">
-        <div
-          *ngFor="
-            let metric of getCurrentIndustryConfig().keyMetrics.slice(0, 3)
-          "
-          class="flex items-center justify-between p-2 rounded-lg"
-          [class.bg-red-50]="metric.critical"
-          [class.border-l-4]="metric.critical"
-          [class.border-red-500]="metric.critical"
-        >
-          <div class="flex-1">
-            <div class="text-xs text-gray-600 dark:text-gray-400">
-              {{ metric.label }}
-            </div>
-            <div
-              class="font-semibold text-sm"
-              [class.text-red-600]="metric.critical"
-              [class.text-gray-900]="!metric.critical"
-            >
-              {{ metric.value }}
-            </div>
-          </div>
-          <span
-            class="material-icons text-sm"
-            [class.text-green-500]="metric.trend === 'up' && !metric.critical"
-            [class.text-red-500]="metric.trend === 'down' || metric.critical"
-            [class.text-gray-400]="metric.trend === 'stable'"
-          >
-            {{ getTrendIcon(metric.trend) }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <div *ngFor="let tab of getFilteredTabs()" class="relative group">
-        <button
-          (click)="setActiveTab(tab.id)"
-          class="w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-          [class.bg-blue-50]="activeTab === tab.id && !sidebarCollapsed"
-          [class.border-l-4]="activeTab === tab.id && !sidebarCollapsed"
-          [class.border-blue-500]="activeTab === tab.id && !sidebarCollapsed"
-          [class.text-blue-600]="activeTab === tab.id"
-          [class.bg-blue-600]="activeTab === tab.id && sidebarCollapsed"
-          [matTooltip]="
-            sidebarCollapsed ? tab.name + ': ' + tab.description : ''
-          "
-          matTooltipPosition="right"
-        >
-          <div class="relative">
-            <span
-              class="material-icons"
-              [class.text-white]="activeTab === tab.id && sidebarCollapsed"
-            >
-              {{ tab.icon }}
-            </span>
-            <span
-              *ngIf="tab.alertCount > 0"
-              class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium"
-            >
-              {{ tab.alertCount > 9 ? "9+" : tab.alertCount }}
-            </span>
-          </div>
-
-          <div *ngIf="!sidebarCollapsed" class="flex-1 min-w-0">
-            <div class="flex items-center justify-between">
-              <span class="font-medium truncate">{{ tab.name }}</span>
-              <span
-                *ngIf="tab.alertCount > 0"
-                class="ml-2 px-2 py-1 bg-red-500 text-white text-xs rounded-full font-medium"
+                class="flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-200"
+                [ngClass]="{
+                  'bg-blue-100 dark:bg-blue-800': activeTab === tab.id,
+                  'bg-gray-100 dark:bg-gray-600 group-hover:bg-gray-200 dark:group-hover:bg-gray-500':
+                    activeTab !== tab.id,
+                }"
               >
-                {{ tab.alertCount }}
-              </span>
-            </div>
-            <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
-              {{ tab.description }}
-            </div>
-          </div>
-        </button>
-      </div>
-    </nav>
+                <span class="material-icons text-lg">{{ tab.icon }}</span>
+              </div>
 
-    <!-- Quick Actions (when expanded) -->
-    <div
-      *ngIf="!sidebarCollapsed"
-      class="p-4 border-t border-gray-200 dark:border-gray-700"
-    >
-      <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-        Quick Actions
-      </h3>
-      <div class="grid grid-cols-2 gap-2">
-        <button
-          *ngFor="let action of getCurrentIndustryConfig().quickActions"
-          class="flex flex-col items-center justify-center p-3 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors text-xs"
-          [style.border-color]="action.color"
-          [style.background-color]="action.color + '10'"
-        >
-          <span
-            class="material-icons text-sm mb-1"
-            [style.color]="action.color"
-          >
-            {{ action.icon }}
-          </span>
-          <span class="font-medium text-gray-700 text-center leading-tight">
-            {{ action.label }}
-          </span>
-        </button>
-      </div>
-    </div>
+              <!-- Label -->
+              <div class="ml-3 hidden md:block">
+                <span class="font-medium text-sm">{{ tab.name }}</span>
+                <p class="text-xs opacity-75 mt-0.5">{{ tab.description }}</p>
+              </div>
 
-    <!-- User Profile -->
-    <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-      <div
-        class="flex items-center space-x-3"
-        [class.justify-center]="sidebarCollapsed"
-      >
+              <!-- Active indicator -->
+              <div
+                *ngIf="activeTab === tab.id"
+                class="absolute right-2 w-2 h-2 bg-blue-500 rounded-full hidden md:block"
+              ></div>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- User section at bottom -->
+      <div class="p-3 border-t border-gray-200 dark:border-gray-700">
         <div
-          class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
+          class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
         >
-          <span class="material-icons text-white text-lg">person</span>
-        </div>
-        <div *ngIf="!sidebarCollapsed" class="flex-1 min-w-0">
-          <div class="font-medium text-gray-900 dark:text-white truncate">
-            {{ userProfile?.name || "User" }}
+          <div
+            class="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center"
+          >
+            <span class="text-white text-sm font-medium">{{
+              (userProfile?.name || "U").charAt(0)
+            }}</span>
           </div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
-            {{ userProfile?.role || "Manager" }}
+          <div class="hidden md:block">
+            <p class="text-sm font-medium text-gray-900 dark:text-white">
+              {{ userProfile?.name || "User" }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              {{ userProfile?.role || "Online" }}
+            </p>
           </div>
         </div>
-        <button
-          *ngIf="!sidebarCollapsed"
-          class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
-          [matMenuTriggerFor]="userMenu"
-        >
-          <span class="material-icons text-gray-500 text-lg">more_vert</span>
-        </button>
       </div>
     </div>
   </div>
 
   <!-- Main Content Area -->
-  <div class="flex-1 flex flex-col min-w-0">
-    <!-- Top Header Bar -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Enhanced Header -->
     <header
-      class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4"
+      class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4"
     >
       <div class="flex items-center justify-between">
         <div>
@@ -209,44 +103,17 @@
             {{ getActiveTabName() }}
           </h1>
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {{ getTabDescription(activeTab) }}
+            {{ getActiveTabDescription() }}
           </p>
         </div>
 
-        <div class="flex items-center space-x-4">
-          <!-- Critical Alerts Badge -->
-          <div *ngIf="getTotalAlerts() > 0" class="flex items-center space-x-2">
-            <div
-              class="flex items-center space-x-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg"
-            >
-              <span class="material-icons text-red-500 text-sm animate-pulse"
-                >warning</span
-              >
-              <span class="text-sm font-medium text-red-700">
-                {{ getTotalAlerts() }} Active Alert{{
-                  getTotalAlerts() > 1 ? "s" : ""
-                }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Weather Indicator -->
-          <div
-            class="flex items-center space-x-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg"
-          >
-            <span class="material-icons text-blue-500 text-sm">wb_sunny</span>
-            <span class="text-sm font-medium text-blue-700">{{
-              getCurrentWeather()
-            }}</span>
-          </div>
-
-          <!-- Notification Bell -->
+        <!-- Header actions -->
+        <div class="flex items-center space-x-3">
+          <!-- Notification bell -->
           <button
-            class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            class="relative p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
           >
-            <span class="material-icons text-gray-600 dark:text-gray-400"
-              >notifications</span
-            >
+            <span class="material-icons">notifications</span>
             <span
               *ngIf="unreadNotifications > 0"
               class="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"
@@ -257,157 +124,134 @@
 
           <!-- Settings -->
           <button
-            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
           >
-            <span class="material-icons text-gray-600 dark:text-gray-400"
-              >settings</span
-            >
+            <span class="material-icons">settings</span>
+          </button>
+
+          <!-- Dark mode toggle -->
+          <button
+            class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+          >
+            <span class="material-icons">dark_mode</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Dashboard Content -->
-    <main class="flex-1 p-6 overflow-y-auto">
-      <!-- Industry-Specific Overview Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <mat-card
-          *ngFor="let metric of getCurrentIndustryConfig().keyMetrics"
-          class="p-6 hover:shadow-lg transition-shadow duration-300"
-          [class.ring-2]="metric.critical"
-          [class.ring-red-500]="metric.critical"
+    <!-- Content Area -->
+    <main class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
+      <div class="p-6">
+        <!-- Quick Stats Cards -->
+        <div
+          *ngIf="shouldShowQuickStats()"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
-                {{ metric.label }}
-              </p>
-              <p
-                class="text-2xl font-bold mt-2"
-                [class.text-red-600]="metric.critical"
-                [class.text-gray-900]="!metric.critical"
-              >
-                {{ metric.value }}
-              </p>
-            </div>
-            <div class="flex flex-col items-end">
-              <span
-                class="material-icons text-2xl"
-                [class.text-green-500]="
-                  metric.trend === 'up' && !metric.critical
-                "
-                [class.text-red-500]="
-                  metric.trend === 'down' || metric.critical
-                "
-                [class.text-gray-400]="metric.trend === 'stable'"
-              >
-                {{ getTrendIcon(metric.trend) }}
-              </span>
-              <span
-                *ngIf="metric.critical"
-                class="text-xs text-red-600 font-medium mt-1 animate-pulse"
-              >
-                Critical
-              </span>
-            </div>
-          </div>
-        </mat-card>
-      </div>
-
-      <!-- Tab Content Placeholder -->
-      <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8"
-      >
-        <div class="text-center text-gray-500 dark:text-gray-400">
-          <span class="material-icons text-6xl mb-4 opacity-50">{{
-            getActiveTabIcon()
-          }}</span>
-          <h3 class="text-xl font-semibold mb-2">
-            {{ getActiveTabName() }} Content
-          </h3>
-          <p class="text-sm">
-            Industry-optimized {{ activeTab }} interface for
-            {{ industryName }} operations
-          </p>
-
-          <!-- Industry-Specific Content Preview -->
-          <div *ngIf="activeTab === 'map'" class="mt-8">
-            <div
-              class="bg-gray-100 dark:bg-gray-700 rounded-lg h-64 flex items-center justify-center"
-            >
-              <div class="text-center">
-                <span class="material-icons text-4xl text-blue-500 mb-2"
-                  >map</span
+          <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 stat-card"
+          >
+            <div class="flex items-center">
+              <div class="p-3 bg-red-100 dark:bg-red-900/20 rounded-lg">
+                <span class="material-icons text-red-600 dark:text-red-400"
+                  >warning</span
                 >
-                <p class="font-medium">Interactive Risk Map</p>
-                <p class="text-sm text-gray-600">
-                  Showing {{ industryName }}-specific risk factors
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  High Risk Areas
+                </p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                  3
                 </p>
               </div>
             </div>
           </div>
 
-          <div *ngIf="activeTab === 'outages'" class="mt-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div class="text-red-600 font-semibold">High Risk Areas</div>
-                <div class="text-2xl font-bold text-red-700 mt-2">3</div>
+          <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 stat-card"
+          >
+            <div class="flex items-center">
+              <div class="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                <span class="material-icons text-blue-600 dark:text-blue-400"
+                  >cloud</span
+                >
               </div>
-              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <div class="text-yellow-600 font-semibold">
-                  Medium Risk Areas
-                </div>
-                <div class="text-2xl font-bold text-yellow-700 mt-2">7</div>
-              </div>
-              <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div class="text-green-600 font-semibold">Low Risk Areas</div>
-                <div class="text-2xl font-bold text-green-700 mt-2">12</div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Weather Alerts
+                </p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                  2
+                </p>
               </div>
             </div>
           </div>
 
-          <div *ngIf="activeTab === 'predict'" class="mt-8">
-            <div
-              class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200"
-            >
-              <div class="flex items-center space-x-3 mb-4">
-                <span class="material-icons text-blue-600">psychology</span>
-                <h4 class="font-semibold text-blue-900">AI Assistant</h4>
+          <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 stat-card"
+          >
+            <div class="flex items-center">
+              <div class="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                <span class="material-icons text-green-600 dark:text-green-400"
+                  >check_circle</span
+                >
               </div>
-              <p class="text-blue-800">
-                "Based on weather patterns, your {{ industryName }} operations
-                have a <span class="font-bold">medium risk</span> of power
-                disruption in the next 72 hours."
-              </p>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Systems Online
+                </p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                  98%
+                </p>
+              </div>
             </div>
           </div>
+
+          <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 stat-card"
+          >
+            <div class="flex items-center">
+              <div class="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+                <span
+                  class="material-icons text-purple-600 dark:text-purple-400"
+                  >auto_awesome</span
+                >
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  AI Predictions
+                </p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                  24h
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 min-h-[600px]"
+        >
+          <app-home
+            *ngIf="activeTab === 'home'"
+            class="block w-full"
+          ></app-home>
+          <app-map *ngIf="activeTab === 'map'" class="block w-full"></app-map>
+          <app-outages
+            *ngIf="activeTab === 'outages'"
+            class="block w-full"
+          ></app-outages>
+          <app-predict
+            *ngIf="activeTab === 'predict'"
+            class="block w-full"
+          ></app-predict>
+          <app-profile
+            *ngIf="activeTab === 'profile'"
+            class="block w-full"
+          ></app-profile>
         </div>
       </div>
     </main>
   </div>
 </div>
-
-<!-- User Menu -->
-<mat-menu #userMenu="matMenu">
-  <button mat-menu-item>
-    <span class="material-icons mr-2">person</span>
-    Profile Settings
-  </button>
-  <button mat-menu-item>
-    <span class="material-icons mr-2">notifications</span>
-    Notification Preferences
-  </button>
-  <button mat-menu-item>
-    <span class="material-icons mr-2">business</span>
-    Organization Settings
-  </button>
-  <mat-divider></mat-divider>
-  <button mat-menu-item>
-    <span class="material-icons mr-2">help</span>
-    Help & Support
-  </button>
-  <button mat-menu-item>
-    <span class="material-icons mr-2">logout</span>
-    Sign Out
-  </button>
-</mat-menu>

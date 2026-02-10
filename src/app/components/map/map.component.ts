@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 
 declare var google: any;
 
 @Component({
   selector: 'app-map',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
