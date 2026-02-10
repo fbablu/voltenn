@@ -33,29 +33,29 @@ export class DashboardComponent {
   activeTab: string = 'map'; // Start with map as it's most visual
 
   tabs: Tab[] = [
-    { 
-      id: 'map', 
-      name: 'Map View', 
+    {
+      id: 'map',
+      name: 'Map View',
       icon: 'map',
-      description: 'Geographic outage visualization'
+      description: 'Geographic outage visualization',
     },
-    { 
-      id: 'outages', 
-      name: 'Risk Analysis', 
+    {
+      id: 'outages',
+      name: 'Risk Analysis',
       icon: 'warning',
-      description: 'County risk assessments'
+      description: 'County risk assessments',
     },
-    { 
-      id: 'predict', 
-      name: 'AI Assistant', 
+    {
+      id: 'predict',
+      name: 'AI Assistant',
       icon: 'auto_awesome',
-      description: 'Predictive insights & planning'
+      description: 'Predictive insights & planning',
     },
-    { 
-      id: 'profile', 
-      name: 'Settings', 
+    {
+      id: 'profile',
+      name: 'Settings',
       icon: 'person',
-      description: 'User & organization management'
+      description: 'User & organization management',
     },
   ];
 
@@ -68,7 +68,9 @@ export class DashboardComponent {
   }
 
   getActiveTabDescription(): string {
-    return this.tabs.find((tab) => tab.id === this.activeTab)?.description || '';
+    return (
+      this.tabs.find((tab) => tab.id === this.activeTab)?.description || ''
+    );
   }
 
   shouldShowQuickStats(): boolean {

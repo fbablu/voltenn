@@ -1,29 +1,43 @@
 <!-- Enhanced Map component with modern controls and better UX -->
 <div class="h-full flex flex-col">
   <!-- Map Controls Header -->
-  <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+  <div
+    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4"
+  >
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Geographic Risk View</h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          Geographic Risk View
+        </h3>
         <div class="flex items-center space-x-2">
           <span class="w-3 h-3 bg-green-400 rounded-full"></span>
           <span class="text-sm text-gray-600 dark:text-gray-400">Low Risk</span>
           <span class="w-3 h-3 bg-yellow-400 rounded-full ml-3"></span>
-          <span class="text-sm text-gray-600 dark:text-gray-400">Medium Risk</span>
+          <span class="text-sm text-gray-600 dark:text-gray-400"
+            >Medium Risk</span
+          >
           <span class="w-3 h-3 bg-red-400 rounded-full ml-3"></span>
-          <span class="text-sm text-gray-600 dark:text-gray-400">High Risk</span>
+          <span class="text-sm text-gray-600 dark:text-gray-400"
+            >High Risk</span
+          >
         </div>
       </div>
-      
+
       <!-- Map Controls -->
       <div class="flex items-center space-x-2">
-        <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+        <button
+          class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+        >
           <span class="material-icons">layers</span>
         </button>
-        <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+        <button
+          class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+        >
           <span class="material-icons">fullscreen</span>
         </button>
-        <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+        <button
+          class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+        >
           <span class="material-icons">refresh</span>
         </button>
       </div>
@@ -33,22 +47,35 @@
   <!-- Map Container -->
   <div class="flex-1 relative">
     <div id="map" class="w-full h-full"></div>
-    
+
     <!-- Floating Time Slider -->
-    <div class="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div
+      class="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4"
+    >
       <div class="flex items-center space-x-4">
-        <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
+        <button
+          class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+        >
           <span class="material-icons">play_arrow</span>
         </button>
         <div class="flex-1">
-          <input type="range" min="0" max="72" value="0" 
-                 class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer">
+          <input
+            type="range"
+            min="0"
+            max="72"
+            value="0"
+            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+          />
         </div>
-        <div class="text-sm font-medium text-gray-900 dark:text-white min-w-[100px] text-right">
+        <div
+          class="text-sm font-medium text-gray-900 dark:text-white min-w-[100px] text-right"
+        >
           Current Time
         </div>
       </div>
-      <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+      <div
+        class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2"
+      >
         <span>Now</span>
         <span>+24h</span>
         <span>+48h</span>
@@ -57,10 +84,15 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div class="absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-75 flex items-center justify-center" 
-         style="display: none;" id="mapLoading">
+    <div
+      class="absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-75 flex items-center justify-center"
+      style="display: none"
+      id="mapLoading"
+    >
       <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
+        ></div>
         <p class="mt-4 text-gray-600 dark:text-gray-400">Loading map data...</p>
       </div>
     </div>

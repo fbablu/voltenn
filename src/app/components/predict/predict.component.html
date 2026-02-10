@@ -3,28 +3,46 @@
   <!-- AI Chat Interface -->
   <div class="flex-1 flex flex-col">
     <!-- Chat Header -->
-    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+    <div
+      class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4"
+    >
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+          <div
+            class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center"
+          >
             <span class="material-icons text-white">auto_awesome</span>
           </div>
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">AI Assistant</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Powered by Gemini AI</p>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              AI Assistant
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Powered by Gemini AI
+            </p>
           </div>
         </div>
-        
+
         <!-- Chat Controls -->
         <div class="flex items-center space-x-2">
-          <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
-                  (click)="handleCalendarSync()"
-                  [class.text-green-600]="isCalendarSynced">
-            <span class="material-icons">{{ isCalendarSynced ? 'check_circle' : 'calendar_today' }}</span>
+          <button
+            class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+            (click)="handleCalendarSync()"
+            [class.text-green-600]="isCalendarSynced"
+          >
+            <span class="material-icons">{{
+              isCalendarSynced ? "check_circle" : "calendar_today"
+            }}</span>
           </button>
-          <button class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
-                  (click)="handleWeatherRefresh()">
-            <span class="material-icons" [class.animate-spin]="isWeatherRefreshing">cloud</span>
+          <button
+            class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+            (click)="handleWeatherRefresh()"
+          >
+            <span
+              class="material-icons"
+              [class.animate-spin]="isWeatherRefreshing"
+              >cloud</span
+            >
           </button>
         </div>
       </div>
@@ -34,78 +52,127 @@
     <div class="flex-1 overflow-y-auto p-4 space-y-4" #messagesContainer>
       <!-- Welcome State -->
       <div *ngIf="messages.length === 0" class="text-center py-12">
-        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div
+          class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
           <span class="material-icons text-white text-2xl">bolt</span>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Weather & Outage Intelligence</h3>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          Weather & Outage Intelligence
+        </h3>
         <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-          Get AI-powered insights about weather conditions and potential outages for your events and schedule.
+          Get AI-powered insights about weather conditions and potential outages
+          for your events and schedule.
         </p>
-        
+
         <!-- Quick Action Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          <button (click)="handleActionClick('calendar')" 
-                  class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 hover:shadow-md">
-            <span class="material-icons text-blue-600 dark:text-blue-400 text-3xl mb-3">calendar_today</span>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Connect Calendar</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Analyze your events for outage risks</p>
+          <button
+            (click)="handleActionClick('calendar')"
+            class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 hover:shadow-md"
+          >
+            <span
+              class="material-icons text-blue-600 dark:text-blue-400 text-3xl mb-3"
+              >calendar_today</span
+            >
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">
+              Connect Calendar
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Analyze your events for outage risks
+            </p>
           </button>
-          
-          <button (click)="handleActionClick('event')" 
-                  class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-all duration-200 hover:shadow-md">
-            <span class="material-icons text-green-600 dark:text-green-400 text-3xl mb-3">schedule</span>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Plan Event</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Check date suitability for planning</p>
+
+          <button
+            (click)="handleActionClick('event')"
+            class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-all duration-200 hover:shadow-md"
+          >
+            <span
+              class="material-icons text-green-600 dark:text-green-400 text-3xl mb-3"
+              >schedule</span
+            >
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">
+              Plan Event
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Check date suitability for planning
+            </p>
           </button>
-          
-          <button (click)="handleActionClick('schedule')" 
-                  class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 hover:shadow-md">
-            <span class="material-icons text-purple-600 dark:text-purple-400 text-3xl mb-3">upload</span>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Analyze Schedule</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Paste your schedule for analysis</p>
+
+          <button
+            (click)="handleActionClick('schedule')"
+            class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 hover:shadow-md"
+          >
+            <span
+              class="material-icons text-purple-600 dark:text-purple-400 text-3xl mb-3"
+              >upload</span
+            >
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">
+              Analyze Schedule
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Paste your schedule for analysis
+            </p>
           </button>
-          
-          <button (click)="handleActionClick('question')" 
-                  class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600 transition-all duration-200 hover:shadow-md">
-            <span class="material-icons text-orange-600 dark:text-orange-400 text-3xl mb-3">chat</span>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Ask Questions</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Get weather and outage insights</p>
+
+          <button
+            (click)="handleActionClick('question')"
+            class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600 transition-all duration-200 hover:shadow-md"
+          >
+            <span
+              class="material-icons text-orange-600 dark:text-orange-400 text-3xl mb-3"
+              >chat</span
+            >
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">
+              Ask Questions
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Get weather and outage insights
+            </p>
           </button>
         </div>
       </div>
 
       <!-- Chat Messages -->
-      <div *ngFor="let message of messages" 
-           class="flex" 
-           [class.justify-end]="message.role === 'user'"
-           [class.justify-start]="message.role === 'assistant'">
-        
-        <div class="flex max-w-[80%] space-x-3" 
-             [class.flex-row-reverse]="message.role === 'user'"
-             [class.space-x-reverse]="message.role === 'user'">
-          
+      <div
+        *ngFor="let message of messages"
+        class="flex"
+        [class.justify-end]="message.role === 'user'"
+        [class.justify-start]="message.role === 'assistant'"
+      >
+        <div
+          class="flex max-w-[80%] space-x-3"
+          [class.flex-row-reverse]="message.role === 'user'"
+          [class.space-x-reverse]="message.role === 'user'"
+        >
           <!-- Avatar -->
-          <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-               [class.bg-blue-600]="message.role === 'user'"
-               [class.bg-gradient-to-br]="message.role === 'assistant'"
-               [class.from-purple-500]="message.role === 'assistant'"
-               [class.to-blue-600]="message.role === 'assistant'">
+          <div
+            class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+            [class.bg-blue-600]="message.role === 'user'"
+            [class.bg-gradient-to-br]="message.role === 'assistant'"
+            [class.from-purple-500]="message.role === 'assistant'"
+            [class.to-blue-600]="message.role === 'assistant'"
+          >
             <span class="material-icons text-white text-sm">
-              {{ message.role === 'user' ? 'person' : 'auto_awesome' }}
+              {{ message.role === "user" ? "person" : "auto_awesome" }}
             </span>
           </div>
-          
+
           <!-- Message Bubble -->
-          <div class="rounded-2xl px-4 py-3"
-               [class.bg-blue-600]="message.role === 'user'"
-               [class.text-white]="message.role === 'user'"
-               [class.bg-white]="message.role === 'assistant'"
-               [class.dark:bg-gray-800]="message.role === 'assistant'"
-               [class.border]="message.role === 'assistant'"
-               [class.border-gray-200]="message.role === 'assistant'"
-               [class.dark:border-gray-700]="message.role === 'assistant'">
+          <div
+            class="rounded-2xl px-4 py-3"
+            [class.bg-blue-600]="message.role === 'user'"
+            [class.text-white]="message.role === 'user'"
+            [class.bg-white]="message.role === 'assistant'"
+            [class.dark:bg-gray-800]="message.role === 'assistant'"
+            [class.border]="message.role === 'assistant'"
+            [class.border-gray-200]="message.role === 'assistant'"
+            [class.dark:border-gray-700]="message.role === 'assistant'"
+          >
             <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
-            <p class="text-xs opacity-75 mt-2">{{ formatTimestamp(message.timestamp) }}</p>
+            <p class="text-xs opacity-75 mt-2">
+              {{ formatTimestamp(message.timestamp) }}
+            </p>
           </div>
         </div>
       </div>
@@ -113,17 +180,33 @@
       <!-- Loading Message -->
       <div *ngIf="isLoading" class="flex justify-start">
         <div class="flex max-w-[80%] space-x-3">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
-            <span class="material-icons text-white text-sm animate-pulse">auto_awesome</span>
+          <div
+            class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center"
+          >
+            <span class="material-icons text-white text-sm animate-pulse"
+              >auto_awesome</span
+            >
           </div>
-          <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3">
+          <div
+            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3"
+          >
             <div class="flex items-center space-x-2">
               <div class="flex space-x-1">
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                <div
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                ></div>
+                <div
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style="animation-delay: 0.1s"
+                ></div>
+                <div
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style="animation-delay: 0.2s"
+                ></div>
               </div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">AI is thinking...</span>
+              <span class="text-sm text-gray-600 dark:text-gray-400"
+                >AI is thinking...</span
+              >
             </div>
           </div>
         </div>
@@ -131,7 +214,9 @@
     </div>
 
     <!-- Chat Input -->
-    <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+    <div
+      class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4"
+    >
       <form (ngSubmit)="handleSend()" class="flex items-end space-x-3">
         <div class="flex-1">
           <textarea
@@ -141,28 +226,38 @@
             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             rows="1"
             [disabled]="isLoading"
-            (keydown)="handleKeyDown($event)"></textarea>
+            (keydown)="handleKeyDown($event)"
+          ></textarea>
         </div>
-        
+
         <button
           type="submit"
           [disabled]="isLoading || !input.trim()"
-          class="p-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          class="p-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
           <span class="material-icons" *ngIf="!isLoading">send</span>
-          <span class="material-icons animate-spin" *ngIf="isLoading">sync</span>
+          <span class="material-icons animate-spin" *ngIf="isLoading"
+            >sync</span
+          >
         </button>
       </form>
     </div>
   </div>
 
   <!-- Calendar Panel (when connected) -->
-  <div *ngIf="isCalendarSynced" 
-       class="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col">
+  <div
+    *ngIf="isCalendarSynced"
+    class="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col"
+  >
     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Calendar</h3>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Events with risk analysis</p>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Calendar
+      </h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Events with risk analysis
+      </p>
     </div>
-    
+
     <div class="flex-1 p-4">
       <!-- Calendar content would go here -->
       <div class="text-center text-gray-500 dark:text-gray-400 py-8">
